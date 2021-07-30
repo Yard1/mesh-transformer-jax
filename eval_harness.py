@@ -10,10 +10,6 @@ from tasks import EvalHarnessAdaptor
 def parse_args():
     # Parse command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tpu", type=str, help="Name of TPU to train on.")
-    parser.add_argument("--tpu_region", type=str, help="Region of TPU to train on.")
-    parser.add_argument("--preemptible", action="store_true")
-
     parser.add_argument("--config", type=str, default=None, help="Config file location")
 
     args = parser.parse_args()
@@ -23,10 +19,6 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     params = json.load(open(args.config))
-
-    tpu_name = args.tpu
-    region = args.tpu_region
-    preemptible = args.preemptible
 
     gradient_accumulation_steps = params.get("gradient_accumulation_steps", 1)
     per_replica_batch = params["per_replica_batch"]
@@ -45,7 +37,7 @@ if __name__ == "__main__":
 
     total_batch = per_replica_batch * tpu_size // cores_per_replica * 4
 
-    t = build_model(params, tpu_name, region, preemptible)
+    t = build_model(params)
     adaptor = EvalHarnessAdaptor(t, seq, total_batch, shrink=pe != "fixed")
 
     step, aux = t.load(bucket, model_dir)

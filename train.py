@@ -43,9 +43,6 @@ if __name__ == "__main__":
               f"all data in gs://{params['bucket']}/{params['model_dir']}/ will be deleted")
         input("Hit enter to continue")
 
-    tpu_name = args.tpu
-    region = args.tpu_region
-    preemptible = args.preemptible
     clean_start = args.new
 
     gradient_accumulation_steps = params.get("gradient_accumulation_steps", 1)
@@ -72,7 +69,7 @@ if __name__ == "__main__":
     pe = params["pe"]
     assert pe in ["fixed", "rotary", "t5"]
 
-    t = build_model(params, tpu_name, region, preemptible, version=args.version)
+    t = build_model(params, version=args.version)
 
     try:
         t.save(0, bucket, model_dir, init=True, overwrite=clean_start)

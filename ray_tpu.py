@@ -7,6 +7,7 @@ import glob
 import requests
 from fabric import Connection
 
+TPU_RESOURCE = "TPU"
 
 @functools.lru_cache()
 def get_bearer():
@@ -162,4 +163,4 @@ def start_ray(conn, address, version=1):
 
     time.sleep(1)
 
-    conn.run(f"TCMALLOC_LARGE_ALLOC_REPORT_THRESHOLD={32 * 1024**3} ray start --address={address} --resources='" + '{"tpu": 1}\' --include-dashboard False', hide=True)
+    conn.run(f"TCMALLOC_LARGE_ALLOC_REPORT_THRESHOLD={32 * 1024**3} ray start --address={address} --resources='" + f'{{"{TPU_RESOURCE}": 1}}\' --include-dashboard False', hide=True)

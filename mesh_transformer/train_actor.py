@@ -4,9 +4,10 @@ import numpy as np
 from queue import Queue
 
 from mesh_transformer.util import head_print
+from ray_tpu import TPU_RESOURCE
 
 
-@ray.remote(resources={"tpu": 1})
+@ray.remote(resources={TPU_RESOURCE: 1})
 class NetworkRunner(object):
     def __init__(self, mesh_shape, network_builder):
         self.mesh_shape = mesh_shape
